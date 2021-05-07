@@ -1,13 +1,16 @@
 const { ApolloServer, gql } = require("apollo-server")
 
+const { rows } = require("../database/postgres")
+
 const typeDefs = gql `
-    type Query {
-        hello: String!
+    type User {
+        id: ID!,
+        username: String!,
     }
 
-    type User {
-        id: String!,
-        username: String!,
+    type Query {
+        hello: String!
+        users: [User]!
     }
 
     type Mutation {
@@ -17,7 +20,10 @@ const typeDefs = gql `
 
 const resolvers = {
     Query: {
-        hello : () => "Hello World!"
+        hello : () => "Hello World!",
+        users: async () => {
+            return await rows(`select * from users`)
+        }
     },
     Mutation: {
         register: (_, { username }) => ({
@@ -31,5 +37,9 @@ const server = new ApolloServer({
     typeDefs,
     resolvers
 })
+
+
+
+
 
 server.listen().then(({ url }) => console.log(`server started at ${url}`))
