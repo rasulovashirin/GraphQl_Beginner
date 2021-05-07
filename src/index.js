@@ -15,6 +15,7 @@ const typeDefs = gql `
 
     type Mutation {
         register(username: String!): User!
+        updateUser(id: ID!, username: String!): User!
     }
 `
 
@@ -28,6 +29,9 @@ const resolvers = {
     Mutation: {
         register: async (_, { username }) => {
             return await row(`insert into users (username) values ($1) returning *`, username)
+        },
+        updateUser: async (_, { id, username }) => {
+            return await row(`update users set username = $2 where id = $1 returning *`, id ,username)
         }
     }
 }
