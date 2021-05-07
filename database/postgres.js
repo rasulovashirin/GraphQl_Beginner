@@ -10,19 +10,19 @@ const pool = new Pool({
 
 const rows = async (SQL, ...params) => {
 
-	const c = await pool.connect()
+	const client = await pool.connect()
 
 	try {
 
-		const { rows } = await c.query(SQL, params)
+		const { rows } = await client.query(SQL, params)
 
 		return rows
 	}
-	catch(e) {
-		throw e
+	catch(error) {
+		throw error
 	}
 	finally {
-		c.release()
+		client.release()
 	}
 }
 
