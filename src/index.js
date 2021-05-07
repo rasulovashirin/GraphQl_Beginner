@@ -14,8 +14,9 @@ const typeDefs = gql `
     }
 
     type Mutation {
-        register(username: String!): User!
-        updateUser(id: ID!, username: String!): User!
+        register (username: String!): User!
+        updateUser (id: ID!, username: String!): User!
+        deleteUser (id: ID!): User!
     }
 `
 
@@ -32,6 +33,9 @@ const resolvers = {
         },
         updateUser: async (_, { id, username }) => {
             return await row(`update users set username = $2 where id = $1 returning *`, id ,username)
+        },
+        deleteUser: async (_, { id }) => {
+            return await row(`delete from users where id = $1 returning *`, id)
         }
     }
 }
