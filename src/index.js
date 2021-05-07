@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server")
 
-const { rows } = require("../database/postgres")
+const { rows, row } = require("../database/postgres")
 
 const typeDefs = gql `
     type User {
@@ -26,10 +26,9 @@ const resolvers = {
         }
     },
     Mutation: {
-        register: (_, { username }) => ({
-            id: 1,
-            username: username
-        })
+        register: async (_, { username }) => {
+            return await row(`insert into users (username) values ($1) returning *`, username)
+        }
     }
 }
 
